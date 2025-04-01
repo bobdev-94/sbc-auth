@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Common setup and fixtures for the pytest suite used by this service."""
+import os
 import time
 from concurrent.futures import CancelledError
 from unittest.mock import MagicMock, patch
@@ -35,6 +36,8 @@ def mock_token(config_id="", config_secret=""):
 @pytest.fixture(scope="session", autouse=True)
 def app():
     """Return a session-wide application configured in TEST mode."""
+    os.environ["CLOUD_STORAGE_EMULATOR_HOST"] = "http://localhost:4443"
+    os.environ["PUBSUB_EMULATOR_HOST"] = "localhost:8085"
     _app = create_app("testing")
 
     return _app
